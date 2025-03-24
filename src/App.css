@@ -1,0 +1,131 @@
+.main-container{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    background-color: #202120;
+    background-size: cover;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-card{
+    background-color: #2E2F2E;
+    border-radius: 15px;
+    width: 40%;
+    height: 40%;
+    padding: 20px;
+    box-shadow: -2px 2px 10px 1px black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;    
+}
+
+.heading{
+    font-size: 48px;
+    font-family: "Bree Serif", serif;
+    color: #D2D3D2;
+    text-align: center;
+}
+
+
+.my-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #D2D3D2; /* Light gray border */
+    border-radius: 5px;
+    background-color: transparent; /* Matches background */
+    color: #D2D3D2; /* Dark blue-gray text */
+    outline: none;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  input:focus {
+    border-color: black; /* Blue focus border */
+    background-color: #ffffff; /* White background on focus */
+    box-shadow: 0 0 5px rgba(245, 246, 247, 0.3);
+  }
+  .my-button {
+    display: inline-block;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: black; /* Primary Blue */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    margin-top: 18px;
+  }
+  
+  button:hover {
+    background-color: #D2D3D2;
+    color: #202120; /* Darker Blue on Hover */
+  }
+  
+  button:active {
+    transform: scale(0.98); /* Slight press effect */
+  }
+  
+  button:disabled {
+    background-color: #A9CCE3; /* Light gray-blue for disabled state */
+    cursor: not-allowed;
+  }
+  
+  .error-msg{
+    color: red;
+    font-size: 18px;
+    margin-top: 10px;
+    font-family: "Lato", sans-serif;
+  }
+
+
+  .result-card{
+    background-color: #2E2F2E;
+    border-radius: 15px;
+    padding: 20px;
+    width: 58%;
+    height:63%;
+    box-shadow: 0 0 10px black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;   
+  }
+
+  .prediction-heading{
+    font-size: 48px;
+    font-family: "Lato", sans-serif;
+    color: #D2D3D2;
+    text-align: center;
+  }
+
+  .result-img{
+    width: 40%;
+    height: 210px;
+    border-radius: 15px;
+  }
+.result-text{
+    font-size: 24px;
+    font-family: "Lato", sans-serif;
+    color: #D2D3D2;
+    text-align: center;
+    margin-top: 20px;
+    list-style-type: circle;
+}
+
+.result-text-item{
+    font-size: 20px;
+    font-family: "Lato", sans-serif;
+    color: #D2D3D2;
+    text-align: center;
+    margin-top: 10px;
+    margin-left: 0px;
+}
+
+.strong{
+    margin-left:0px;
+}
