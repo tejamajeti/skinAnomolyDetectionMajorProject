@@ -9,7 +9,7 @@ from flask import Flask, render_template, request, redirect, flash, url_for, jso
 from keras.models import load_model
 from keras.utils import load_img, img_to_array
 from flask_cors import CORS
-
+import numpy as np
 # Initialize Flask app
 app = Flask(__name__)
 CORS(app, resources={r"/predict": {"origins": "*"}})  # Allow all origins
@@ -21,7 +21,9 @@ logger = logging.getLogger(__name__)
 
 # Constants
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join(BASE_DIR, 'skin_disease_model_ISIC_densenet.h5')
+densenet_path = os.path.join(BASE_DIR, 'skin_disease_model_ISIC_densenet.h5')
+cnn_path = os.path.join(BASE_DIR, 'cnn.h5')
+mobilenet_path=os.path.join(BASE_DIR, 'Mobilenet.h5')
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'jfif'}
 IMAGE_UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'images')
 
@@ -30,7 +32,9 @@ os.makedirs(IMAGE_UPLOAD_FOLDER, exist_ok=True)
 
 # Load model
 try:
-    model = load_model(MODEL_PATH)
+    densenetmodel = load_model(densenet_path)
+    cnn_model=load_model(cnn_path)
+    mobilenetmodel=load_model(mobilenet_path)
     logger.info("Model loaded successfully")
 except Exception as e:
     logger.error(f"Failed to load model: {str(e)}")
@@ -61,7 +65,7 @@ classes = [
     'Vascular lesion'
 ]
 
-def predict(filename: str, model) -> Dict:
+def predict(filename: str) -> Dict:
     """Predict skin disease from an image."""
     try:
         logger.info(f"Loading image: {filename}")  # Debugging log
@@ -71,17 +75,29 @@ def predict(filename: str, model) -> Dict:
         img = img.astype('float32') / 255.0
 
         logger.info(f"Running model prediction...")  # Debugging log
-        result = model.predict(img)[0]
+        densent_result = densenetmodel.predict(img)[0]
+        cnn_result = cnn_model.predict(img)[0]
+        mobilenet_result = mobilenetmodel.predict(img)[0]
         
-        sorted_indices = result.argsort()[-1]
+        dense_pred_idx = np.argmax(densent_result)
+        cnn_pred_idx = np.argmax(cnn_result)
+        mobile_pred_idx = np.argmax(mobilenet_result)
+
         predictions = {
-            f"class{1}": classes[sorted_indices]        }
-        probabilities = {
-            f"prob{1}": round(float(result[sorted_indices] * 100), 2) 
+            "densenet_class": classes[dense_pred_idx],
+            "cnn_class": classes[cnn_pred_idx],
+            "mobilenet_class": classes[mobile_pred_idx],
         }
 
-        logger.info(f"Prediction result: {predictions}, {probabilities}")  # Debugging log
+        probabilities = {
+            "densenet_prob": round(float(densent_result[dense_pred_idx] * 100), 2),
+            "cnn_prob": round(float(cnn_result[cnn_pred_idx] * 100), 2),
+            "mobilenet_prob": round(float(mobilenet_result[mobile_pred_idx] * 100), 2),
+        }
+
+        logger.info(f"Prediction result: {predictions}, {probabilities}")
         return {**predictions, **probabilities}
+
 
     except Exception as e:
         logger.error(f"Prediction failed: {str(e)}")  # Debugging log
@@ -115,7 +131,7 @@ def predict_image():
         logger.info(f"Image saved at: {img_path}")  # Debugging log
 
         # Make prediction
-        predictions = predict(img_path, model)
+        predictions = predict(img_path)
         logger.info(f"Predictions: {predictions}")  # Debugging log
 
         predictions["image_url"] = f"/static/images/{filename}"

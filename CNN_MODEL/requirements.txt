@@ -10,4 +10,4 @@ wincertstore==0.2
 pillow==8.4.0
 flask-cors
 tensorflow==2.9.1
-
+numpy

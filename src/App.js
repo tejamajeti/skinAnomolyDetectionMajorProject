@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Loader } from "lucide-react";
+import TableComponent  from "./components/TableComponent";
 import "./App.css";
 
 const App = () => {
@@ -9,6 +10,7 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  console.log(predictions);
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
     setPredictions(null);
@@ -40,6 +42,7 @@ const App = () => {
     }
   };
 
+
   return (
     <div className="main-container">
       {!predictions && (<div className="main-card">
@@ -58,15 +61,7 @@ const App = () => {
           {predictions.image_url && (
             <img src={`http://localhost:4000${predictions.image_url}`} alt="Uploaded" className="result-img" />
           )}
-          <ul className="result-text">
-            {Object.entries(predictions).map(([key, value]) =>
-              key.includes("class") || key.includes("prob") ? (
-                <li key={key} className="result-text-item">
-                  <strong className="strong">{key.replace("class", "Condition").replace("prob", "Probability")}: </strong> {value}
-                </li>
-              ) : null
-            )}
-          </ul>
+          <TableComponent data={predictions} />
         </div>
       )}
     </div>
